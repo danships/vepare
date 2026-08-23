@@ -1,0 +1,18 @@
+{
+  "name": "initial-project",
+  "private": true,
+  "engines": {
+    "node": "24.x"
+  },
+  "packageManager": "pnpm@11.23.0",
+  "scripts": {
+    "dev": "pnpm --filter @repo/web dev",
+    "build": "pnpm --filter @repo/web build",
+    "start": "pnpm --filter @repo/web start",
+    "lint": "pnpm --filter @repo/web lint",
+    "lint:eslint": "pnpm --filter @repo/web lint:eslint",
+    "lint:prettier": "pnpm --filter @repo/web lint:prettier",
+    "lint:tsc": "pnpm --filter @repo/web lint:tsc",
+    "format": "pnpm --filter @repo/web format"
+  }
+}
