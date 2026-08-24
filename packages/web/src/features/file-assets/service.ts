@@ -23,7 +23,7 @@ export async function registerFileAsset(input: RegisterFileAssetRequest, princip
     throw error;
   }
   const id = createHash('sha256').update(inspected.relativePath, 'utf8').digest('hex').slice(0, 32);
-  const candidate = { id, ...inspected, createdBy: principal, createdAt: new Date().toISOString() };
+  const candidate = { id, ...inspected, createdBy: principal, createdAt: new Date().toISOString(), projectId: null };
   const existing = await getFileAssetById(id);
   if (existing) {
     if (existing.relativePath !== input.relativePath) return { kind: 'conflict', code: 'ASSET_ID_COLLISION' };
