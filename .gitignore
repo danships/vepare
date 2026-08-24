@@ -11,3 +11,4 @@ packages/web/coverage/
 packages/media-ingest/dist/
 .vercel/
 packages/web/.vercel/
+**/.data/
