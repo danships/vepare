@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "watch": { "directory": "/mnt/media/Ingest", "recursive": true, "settleSeconds": 30, "pollIntervalSeconds": 5 },
+  "local": {
+    "stateDirectory": "/home/me/.local/state/media-ingest",
+    "workDirectory": "/home/me/.local/share/media-ingest"
+  },
+  "proxy": { "maxLongEdge": 1280, "videoCrf": 28, "videoPreset": "veryfast", "audioBitrateKbps": 128 },
+  "upload": {
+    "destination": "media-upload@example.com",
+    "port": 22,
+    "identityFile": "/home/me/.ssh/media_ingest_ed25519",
+    "remoteBasePath": "/srv/rough-cut",
+    "connectTimeoutSeconds": 15
+  },
+  "retry": { "maxProbeAttempts": 3, "maxTranscodeAttempts": 3, "maxUploadAttempts": 8 },
+  "logLevel": "info",
+  "jsonLogs": false
+}

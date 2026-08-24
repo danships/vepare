@@ -8,5 +8,6 @@ next-env.d.ts
 packages/web/.next/
 packages/web/out/
 packages/web/coverage/
+packages/media-ingest/dist/
 .vercel/
 packages/web/.vercel/

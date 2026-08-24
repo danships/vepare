@@ -7,12 +7,14 @@
   "packageManager": "pnpm@11.23.0",
   "scripts": {
     "dev": "pnpm --filter @repo/web dev",
-    "build": "pnpm --filter @repo/web build",
+    "build": "pnpm -r --if-present build",
     "start": "pnpm --filter @repo/web start",
-    "lint": "pnpm --filter @repo/web lint",
-    "lint:eslint": "pnpm --filter @repo/web lint:eslint",
-    "lint:prettier": "pnpm --filter @repo/web lint:prettier",
-    "lint:tsc": "pnpm --filter @repo/web lint:tsc",
-    "format": "pnpm --filter @repo/web format"
+    "lint": "pnpm -r --if-present lint",
+    "lint:eslint": "pnpm -r --if-present lint:eslint",
+    "lint:prettier": "pnpm -r --if-present lint:prettier",
+    "lint:tsc": "pnpm -r --if-present lint:tsc",
+    "format": "pnpm -r --if-present format",
+    "ingest": "pnpm --filter @repo/media-ingest dev --",
+    "test": "pnpm -r --if-present test"
   }
 }
