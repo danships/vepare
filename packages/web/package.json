@@ -14,16 +14,24 @@
     "lint:eslint": "eslint src next.config.ts",
     "lint:prettier": "prettier --check --log-level=warn src next.config.ts package.json tsconfig.json",
     "lint:tsc": "tsc --noEmit",
-    "format": "prettier --write src next.config.ts package.json tsconfig.json && eslint --fix src next.config.ts"
+    "format": "prettier --write src next.config.ts package.json tsconfig.json && eslint --fix src next.config.ts",
+    "test": "vitest run --config vitest.config.ts"
   },
   "dependencies": {
     "@mantine/core": "9.5.1",
     "@mantine/hooks": "9.5.1",
+    "better-sqlite3": "^12.11.1",
+    "mime-types": "^3.0.2",
+    "mysql2": "^3.23.4",
     "next": "16.3.2",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "supersave": "1.0.0-beta4",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
+    "@types/mime-types": "^3.0.1",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.2",
     "@types/react-dom": "^19.2.2",
@@ -32,6 +40,7 @@
     "eslint-config-next": "16.3.2",
     "eslint-plugin-unicorn": "^65.0.0",
     "prettier": "^3.7.4",
-    "typescript": "^5.9.3"
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.11"
   }
 }
