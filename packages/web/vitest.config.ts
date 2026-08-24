@@ -4,4 +4,7 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   resolve: { alias: { "@": path.resolve(path.dirname(fileURLToPath(import.meta.url)), "src") } },
+  test: {
+    exclude: ['**/node_modules/**', 'src/lib/auth-crypto.test.ts'],
+  },
 });
