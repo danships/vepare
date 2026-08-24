@@ -32,6 +32,14 @@ describe('inspectAsset', () => {
       sha256: '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824',
     });
   });
+  it('allows file names that begin with two dots', async () => {
+    const directory = await root();
+    await writeFile(path.join(directory, '..file.txt'), 'hello');
+    await expect(inspectAsset('..file.txt', limits(directory))).resolves.toMatchObject({
+      originalName: '..file.txt',
+      sha256: '2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824',
+    });
+  });
   it('rejects missing, non-files, symlinks, and oversized files', async () => {
     const directory = await root();
     await mkdir(path.join(directory, 'directory'));

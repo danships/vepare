@@ -26,7 +26,12 @@ export function getEnv(source: NodeJS.ProcessEnv = process.env): AppEnv {
       ASSET_REGISTRY_API_KEYS: z.string().min(1),
     })
     .parse(source);
-  const apiKeys = z.array(keySchema).parse(JSON.parse(parsed.ASSET_REGISTRY_API_KEYS));
+  let apiKeys: AssetPrincipal[];
+  try {
+    apiKeys = z.array(keySchema).parse(JSON.parse(parsed.ASSET_REGISTRY_API_KEYS));
+  } catch {
+    throw new Error('Invalid asset registry API-key configuration.');
+  }
   if (
     new Set(apiKeys.map((item) => item.principal)).size !== apiKeys.length ||
     new Set(apiKeys.map((item) => item.key)).size !== apiKeys.length ||

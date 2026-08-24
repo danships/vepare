@@ -47,8 +47,16 @@ export async function inspectAsset(
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') throw new AssetStoreError('FILE_NOT_FOUND');
     throw new AssetStoreError('SERVICE_UNAVAILABLE');
   }
-  const resolvedCandidate = await realpath(candidate);
-  if (path.relative(root, resolvedCandidate).startsWith('..')) throw new AssetStoreError('NOT_A_REGULAR_FILE');
+  let resolvedCandidate: string;
+  try {
+    resolvedCandidate = await realpath(candidate);
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === 'ENOENT') throw new AssetStoreError('FILE_NOT_FOUND');
+    throw new AssetStoreError('SERVICE_UNAVAILABLE');
+  }
+  const relative = path.relative(root, resolvedCandidate);
+  if (!relative || relative === '..' || relative.startsWith(`..${path.sep}`) || path.isAbsolute(relative))
+    throw new AssetStoreError('NOT_A_REGULAR_FILE');
   let handle;
   try {
     handle = await open(candidate, constants.O_RDONLY | constants.O_NOFOLLOW);
