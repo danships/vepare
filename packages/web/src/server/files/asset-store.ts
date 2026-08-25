@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import path from 'node:path';
 import { lookup } from 'mime-types';
 import { getEnv } from '@/server/config/env';
+import type { FileAssetRecord } from '@/features/file-assets/types';
 
 export class AssetStoreError extends Error {
   constructor(
@@ -13,6 +14,14 @@ export class AssetStoreError extends Error {
   ) {
     super(code);
   }
+}
+export async function openRegisteredAsset(record: FileAssetRecord) {
+  const inspected = await inspectAsset(record.relativePath);
+  if (inspected.sizeBytes !== record.sizeBytes || inspected.sha256 !== record.sha256)
+    throw new AssetStoreError('FILE_CHANGED');
+  const root = await realpath(getEnv().assetRoot);
+  const pathname = path.join(root, ...record.relativePath.split('/'));
+  return open(pathname, constants.O_RDONLY | constants.O_NOFOLLOW);
 }
 type Identity = { dev: number; ino: number; size: number; mtimeMs: number };
 const identity = (stat: { dev: number; ino: number; size: number; mtimeMs: number }): Identity => ({

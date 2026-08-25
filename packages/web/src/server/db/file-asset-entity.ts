@@ -11,7 +11,10 @@ export const fileAssetEntity: EntityDefinition = {
     createdBy: '',
     createdAt: '',
     projectId: null,
+    durationMs: null,
+    videoFrameRateNumerator: null,
+    videoFrameRateDenominator: null,
   },
   relations: [],
-  filterSortFields: { projectId: 'string', createdAt: 'string' },
+  filterSortFields: { projectId: 'string', createdAt: 'string', durationMs: 'number' },
 };

@@ -13,6 +13,9 @@ const recordSchema = z
     createdBy: z.string(),
     createdAt: z.string().datetime(),
     projectId: z.string().nullable().default(null),
+    durationMs: z.number().int().nonnegative().nullable().default(null),
+    videoFrameRateNumerator: z.number().int().positive().nullable().default(null),
+    videoFrameRateDenominator: z.number().int().positive().nullable().default(null),
   })
   .strict();
 export class DuplicateAssetIdError extends Error {}

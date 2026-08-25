@@ -1,13 +1,26 @@
 import { bulkSetProjectId, listByProject, listInbox } from '@/features/file-assets/repository';
 import type { MediaSummary } from '@/features/file-assets/types';
 import { getProjectById } from '@/features/projects/repository';
-const summary = ({ id, originalName, mimeType, sizeBytes, createdAt, projectId }: MediaSummary): MediaSummary => ({
+const summary = ({
   id,
   originalName,
   mimeType,
   sizeBytes,
   createdAt,
   projectId,
+  durationMs,
+  videoFrameRateNumerator,
+  videoFrameRateDenominator,
+}: MediaSummary): MediaSummary => ({
+  id,
+  originalName,
+  mimeType,
+  sizeBytes,
+  createdAt,
+  projectId,
+  durationMs,
+  videoFrameRateNumerator,
+  videoFrameRateDenominator,
 });
 export async function getInboxMedia(limit: number, offset: number) {
   const items = await listInbox({ limit: limit + 1, offset });
