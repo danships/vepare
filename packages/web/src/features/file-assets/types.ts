@@ -8,13 +8,24 @@ export type FileAssetRecord = {
   createdBy: string;
   createdAt: string;
   projectId: string | null;
+  durationMs: number | null;
+  videoFrameRateNumerator: number | null;
+  videoFrameRateDenominator: number | null;
 };
 
 export type RegisterFileAssetRequest = Pick<FileAssetRecord, 'relativePath'>;
 export type FileAssetResponse = { data: FileAssetRecord };
 export type MediaSummary = Pick<
   FileAssetRecord,
-  'id' | 'originalName' | 'mimeType' | 'sizeBytes' | 'createdAt' | 'projectId'
+  | 'id'
+  | 'originalName'
+  | 'mimeType'
+  | 'sizeBytes'
+  | 'createdAt'
+  | 'projectId'
+  | 'durationMs'
+  | 'videoFrameRateNumerator'
+  | 'videoFrameRateDenominator'
 >;
 export type ErrorResponse = { error: { code: string; message: string; fields?: Record<string, string[]> } };
 

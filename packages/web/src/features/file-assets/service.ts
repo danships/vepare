@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { inspectAsset, AssetStoreError } from '@/server/files/asset-store';
+import { inspectAssetWithPlaybackMetadata, AssetStoreError } from '@/server/files/asset-store';
 import { createFileAsset, DuplicateAssetIdError, getFileAssetById } from './repository';
 import type { FileAssetRecord, RegisterFileAssetRequest, RegisterResult } from './types';
 
@@ -12,9 +12,9 @@ const sameImmutable = (record: FileAssetRecord, incoming: Omit<FileAssetRecord, 
   record.createdBy === incoming.createdBy;
 
 export async function registerFileAsset(input: RegisterFileAssetRequest, principal: string): Promise<RegisterResult> {
-  let inspected;
+  let inspection: Awaited<ReturnType<typeof inspectAssetWithPlaybackMetadata>>;
   try {
-    inspected = await inspectAsset(input.relativePath);
+    inspection = await inspectAssetWithPlaybackMetadata(input.relativePath);
   } catch (error) {
     if (error instanceof AssetStoreError) {
       if (error.code === 'FILE_CHANGED') return { kind: 'conflict', code: error.code };
@@ -22,8 +22,18 @@ export async function registerFileAsset(input: RegisterFileAssetRequest, princip
     }
     throw error;
   }
-  const id = createHash('sha256').update(inspected.relativePath, 'utf8').digest('hex').slice(0, 32);
-  const candidate = { id, ...inspected, createdBy: principal, createdAt: new Date().toISOString(), projectId: null };
+  const { inspected: asset, playbackMetadata } = inspection;
+  const id = createHash('sha256').update(asset.relativePath, 'utf8').digest('hex').slice(0, 32);
+  const candidate = {
+    id,
+    ...asset,
+    createdBy: principal,
+    createdAt: new Date().toISOString(),
+    projectId: null,
+    durationMs: playbackMetadata?.durationMs ?? null,
+    videoFrameRateNumerator: playbackMetadata?.videoFrameRateNumerator ?? null,
+    videoFrameRateDenominator: playbackMetadata?.videoFrameRateDenominator ?? null,
+  };
   const existing = await getFileAssetById(id);
   if (existing) {
     if (existing.relativePath !== input.relativePath) return { kind: 'conflict', code: 'ASSET_ID_COLLISION' };

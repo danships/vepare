@@ -7,6 +7,9 @@ export const mediaSummarySchema = z.object({
   sizeBytes: z.number().int().nonnegative(),
   createdAt: z.string(),
   projectId: z.string().nullable(),
+  durationMs: z.number().int().nonnegative().nullable(),
+  videoFrameRateNumerator: z.number().int().positive().nullable(),
+  videoFrameRateDenominator: z.number().int().positive().nullable(),
 });
 
 export const mediaPageSchema = z.object({
