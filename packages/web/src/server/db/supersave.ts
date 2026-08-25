@@ -1,29 +1,36 @@
 import { SuperSave } from 'supersave';
 import type { FileAssetRecord } from '@/features/file-assets/types';
+import type { ProjectRecord } from '@/features/projects/types';
 import { getEnv } from '@/server/config/env';
 import { fileAssetEntity } from './file-asset-entity';
+import { projectEntity } from './project-entity';
 
-type Database = { database: SuperSave; repository: Awaited<ReturnType<SuperSave['addEntity']>> };
-const globalDatabase = globalThis as typeof globalThis & { fileAssetDatabase?: Promise<Database> };
+type Database = {
+  database: SuperSave;
+  fileAssets: Awaited<ReturnType<SuperSave['addEntity']>>;
+  projects: Awaited<ReturnType<SuperSave['addEntity']>>;
+};
+const globalDatabase = globalThis as typeof globalThis & { databasePromise?: Promise<Database> };
 
-export async function getFileAssetDatabase(): Promise<Database> {
-  globalDatabase.fileAssetDatabase ??= (async () => {
+export async function getDatabase(): Promise<Database> {
+  globalDatabase.databasePromise ??= (async () => {
     const database = await SuperSave.create(getEnv().databaseUrl);
-    const repository = await database.addEntity<FileAssetRecord>(fileAssetEntity);
-    return { database, repository };
+    const fileAssets = await database.addEntity<FileAssetRecord>(fileAssetEntity);
+    const projects = await database.addEntity<ProjectRecord>(projectEntity);
+    return { database, fileAssets, projects };
   })();
   try {
-    return await globalDatabase.fileAssetDatabase;
+    return await globalDatabase.databasePromise;
   } catch (error) {
-    delete globalDatabase.fileAssetDatabase;
+    delete globalDatabase.databasePromise;
     throw error;
   }
 }
 
-export async function closeFileAssetDatabase(): Promise<void> {
-  if (globalDatabase.fileAssetDatabase) {
-    const database = await globalDatabase.fileAssetDatabase;
+export async function closeDatabase(): Promise<void> {
+  if (globalDatabase.databasePromise) {
+    const database = await globalDatabase.databasePromise;
     await database.database.close();
   }
-  delete globalDatabase.fileAssetDatabase;
+  delete globalDatabase.databasePromise;
 }

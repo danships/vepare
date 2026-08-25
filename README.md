@@ -1,5 +1,9 @@
 # Initial project
 
+## Media organization
+
+Registered media starts in the Inbox. Projects organize media by changing database metadata only: assigning, returning, and archiving never move, rename, or modify files under `ASSET_ROOT`. Production database runtime access requires `SELECT`, `INSERT`, and `UPDATE`; schema synchronization should be performed during a controlled deployment with temporary DDL rights. The runtime account must not receive filesystem write, database `DELETE`/`DROP`, or `FILE` privileges.
+
 This repository is a pnpm workspace containing the Next.js application in `packages/web` and the local media ingest client in `packages/media-ingest`.
 
 ## Prerequisites
@@ -26,6 +30,7 @@ AUTH_PRESHARED_KEY=<random-32-character-or-longer-secret>
 Changing `AUTH_PRESHARED_KEY` immediately invalidates every existing browser session. Production must terminate HTTPS and rate-limit `POST /login` at the reverse proxy to 10 attempts per source IP per rolling minute, returning HTTP 429 before excess requests reach Next.js. This repository does not manage a deployment proxy; configure that rule in the hosting platform's deployment configuration.
 
 The ingest client requires Linux/WSL system tools (`ffmpeg`, `ffprobe`, SSH, and rsync). See [its README](packages/media-ingest/README.md) for configuration and operational guidance.
+
 ## File asset registration
 
 Copy files into the configured asset root with rsync before registering them. Local development uses SQLite:

@@ -10,6 +10,8 @@ export const fileAssetEntity: EntityDefinition = {
     sha256: '',
     createdBy: '',
     createdAt: '',
+    projectId: null,
   },
   relations: [],
+  filterSortFields: { projectId: 'string', createdAt: 'string' },
 };

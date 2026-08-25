@@ -1,5 +1,7 @@
 # Asset registration
 
+Registered assets are immutable. New assets have no project and therefore appear in the Inbox; project assignment changes only the stored `projectId`, never the physical file, its path, or checksum. Before production schema synchronization, back up the database and `ASSET_ROOT` together and verify that the existing asset count equals the Inbox count afterwards.
+
 Production assets live at `/srv/vpe/assets`. The deploy account writes assets with:
 
 ```sh

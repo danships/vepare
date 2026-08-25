@@ -2,13 +2,13 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { closeFileAssetDatabase } from '@/server/db/supersave';
+import { closeDatabase } from '@/server/db/supersave';
 import { registerFileAsset } from './service';
 
 const oldEnvironment = { ...process.env };
 const roots: string[] = [];
 afterEach(async () => {
-  await closeFileAssetDatabase();
+  await closeDatabase();
   process.env = { ...oldEnvironment };
   await Promise.all(roots.splice(0).map((directory) => rm(directory, { recursive: true, force: true })));
 });

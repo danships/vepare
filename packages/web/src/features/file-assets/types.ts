@@ -7,10 +7,15 @@ export type FileAssetRecord = {
   sha256: string;
   createdBy: string;
   createdAt: string;
+  projectId: string | null;
 };
 
 export type RegisterFileAssetRequest = Pick<FileAssetRecord, 'relativePath'>;
 export type FileAssetResponse = { data: FileAssetRecord };
+export type MediaSummary = Pick<
+  FileAssetRecord,
+  'id' | 'originalName' | 'mimeType' | 'sizeBytes' | 'createdAt' | 'projectId'
+>;
 export type ErrorResponse = { error: { code: string; message: string; fields?: Record<string, string[]> } };
 
 export type RegisterResult =
