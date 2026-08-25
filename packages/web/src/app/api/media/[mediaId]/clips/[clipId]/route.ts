@@ -28,14 +28,17 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ me
         { data: result.record },
         { headers: { 'Cache-Control': 'no-store', 'X-Request-ID': requestId } }
       );
+    let failure: [string, number] = ['CLIP_NOT_FOUND', 404];
+    if (result.kind === 'out_of_bounds') failure = ['RANGE_OUT_OF_BOUNDS', 422];
+    if (result.kind === 'inactive') failure = ['MEDIA_NOT_IN_ACTIVE_PROJECT', 409];
+    return errorResponse(failure[0], 'Clip could not be updated.', failure[1], requestId);
+  } catch (error) {
     return errorResponse(
-      result.kind === 'out_of_bounds' ? 'RANGE_OUT_OF_BOUNDS' : 'CLIP_NOT_FOUND',
-      'Clip could not be updated.',
-      result.kind === 'out_of_bounds' ? 422 : 404,
+      error instanceof RangeError ? 'REQUEST_TOO_LARGE' : 'INVALID_JSON',
+      error instanceof RangeError ? 'Request body is too large.' : 'Request body is invalid.',
+      error instanceof RangeError ? 413 : 400,
       requestId
     );
-  } catch {
-    return errorResponse('INVALID_JSON', 'Request body is invalid.', 400, requestId);
   }
 }
 export async function DELETE(request: Request, { params }: { params: Promise<{ mediaId: string; clipId: string }> }) {

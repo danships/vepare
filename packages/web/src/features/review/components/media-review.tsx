@@ -5,7 +5,8 @@ import type { ClipResponse, MarkerResponse } from '@/features/annotations/types'
 import type { MediaSummary } from '@/features/file-assets/types';
 import { formatTimestamp, secondsToMs } from '../time';
 type Properties = { media: MediaSummary; markers: MarkerResponse[]; clips: ClipResponse[]; readOnly: boolean };
-async function request(url: string, method: string, body?: unknown) {
+type ApiResponse<T> = { data: T };
+async function request<T>(url: string, method: string, body?: unknown): Promise<ApiResponse<T> | null> {
   const response = await fetch(url, {
     method,
     headers: body ? { 'Content-Type': 'application/json' } : undefined,
@@ -16,7 +17,7 @@ async function request(url: string, method: string, body?: unknown) {
     const json = (await response.json().catch(() => null)) as { error?: { message?: string } } | null;
     throw new Error(json?.error?.message ?? 'Request failed.');
   }
-  return response.status === 204 ? null : response.json();
+  return response.status === 204 ? null : (response.json() as Promise<ApiResponse<T>>);
 }
 export function MediaReview({ media, markers: initialMarkers, clips: initialClips, readOnly }: Properties) {
   const video = useRef<HTMLVideoElement>(null);
@@ -30,8 +31,13 @@ export function MediaReview({ media, markers: initialMarkers, clips: initialClip
   const duration = media.durationMs ?? 0;
   const current = () => Math.min(duration, secondsToMs(video.current?.currentTime ?? 0));
   const createMarker = async () => {
+    setError(undefined);
     try {
-      const data = await request(`/api/media/${media.id}/markers`, 'POST', { timestampMs: current(), note });
+      const data = await request<MarkerResponse>(`/api/media/${media.id}/markers`, 'POST', {
+        timestampMs: current(),
+        note,
+      });
+      if (!data) throw new Error('Unable to create marker.');
       setMarkers((value) => [...value, data.data].toSorted((a, b) => a.timestampMs - b.timestampMs));
       setNote('');
     } catch (error_) {
@@ -40,8 +46,10 @@ export function MediaReview({ media, markers: initialMarkers, clips: initialClip
   };
   const createClip = async () => {
     if (inMs === null || outMs === null) return;
+    setError(undefined);
     try {
-      const data = await request(`/api/media/${media.id}/clips`, 'POST', { inMs, outMs });
+      const data = await request<ClipResponse>(`/api/media/${media.id}/clips`, 'POST', { inMs, outMs });
+      if (!data) throw new Error('Unable to save clip.');
       setClips((value) => [...value, data.data].toSorted((a, b) => a.inMs - b.inMs));
       setInMs(null);
       setOutMs(null);

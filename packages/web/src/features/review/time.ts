@@ -8,7 +8,7 @@ export const formatTimestamp = (milliseconds: number) => {
   return `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}.${String(safe % 1000).padStart(3, '0')}`;
 };
 export function parseTimestamp(value: string) {
-  const match = /^(\d{2}):(\d{2}):(\d{2})\.(\d{3})$/.exec(value);
+  const match = /^(\d+):(\d{2}):(\d{2})\.(\d{3})$/.exec(value);
   if (!match) return null;
   const [, h, m, s, ms] = match;
   if (+m > 59 || +s > 59) return null;
