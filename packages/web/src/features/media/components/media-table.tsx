@@ -12,6 +12,7 @@ export function MediaTable({ media, selected, onChange }: Properties) {
         <Table.Tr>
           <Table.Th>
             <Checkbox
+              aria-label="Select all media"
               checked={all}
               onChange={() =>
                 onChange(all ? selected.filter((id) => !ids.includes(id)) : [...new Set([...selected, ...ids])])
@@ -29,6 +30,7 @@ export function MediaTable({ media, selected, onChange }: Properties) {
           <Table.Tr key={item.id}>
             <Table.Td>
               <Checkbox
+                aria-label={`Select ${item.originalName}`}
                 checked={selected.includes(item.id)}
                 onChange={() =>
                   onChange(

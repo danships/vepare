@@ -34,7 +34,3 @@ export async function closeDatabase(): Promise<void> {
   }
   delete globalDatabase.databasePromise;
 }
-
-// Compatibility for existing registration tests and callers.
-export const getFileAssetDatabase = getDatabase;
-export const closeFileAssetDatabase = closeDatabase;

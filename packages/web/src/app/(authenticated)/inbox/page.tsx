@@ -10,7 +10,7 @@ export default async function InboxPage() {
       <Text c="dimmed" mb="md">
         Unassigned registered media.
       </Text>
-      <MediaList media={media.data} projects={projects} />
+      <MediaList media={media.data} page={media.page} pageUrl="/api/inbox/media" projects={projects} />
     </Container>
   );
 }

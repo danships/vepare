@@ -12,7 +12,7 @@ export function ProjectFormModal() {
   const submit = async () => {
     setLoading(true);
     try {
-      await createProjectClient(name);
+      await createProjectClient({ name });
       setOpened(false);
       setName('');
       router.refresh();

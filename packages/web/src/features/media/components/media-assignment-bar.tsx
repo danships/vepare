@@ -23,6 +23,7 @@ export function MediaAssignmentBar({ ids, projects, onAssign, allowInbox = true 
   return (
     <Group my="md">
       <Select
+        label="Project"
         placeholder="Select project"
         data={projects.filter((p) => !p.archivedAt).map((p) => ({ value: p.id, label: p.name }))}
         value={target}

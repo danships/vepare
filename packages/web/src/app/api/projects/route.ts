@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     return errorResponse(
       error instanceof RangeError ? 'REQUEST_TOO_LARGE' : 'INVALID_JSON',
       'Request body is invalid.',
-      400,
+      error instanceof RangeError ? 413 : 400,
       id
     );
   }

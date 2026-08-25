@@ -44,8 +44,13 @@ export async function PATCH(request: Request, context: Context) {
     if (result === 'not_found') return errorResponse('PROJECT_NOT_FOUND', 'Project was not found.', 404, id);
     if (result === 'archived') return errorResponse('PROJECT_ARCHIVED', 'Archived projects are immutable.', 409, id);
     return Response.json({ data: result }, { headers: headers(id) });
-  } catch {
-    return errorResponse('INVALID_JSON', 'Request body is invalid.', 400, id);
+  } catch (error) {
+    return errorResponse(
+      error instanceof RangeError ? 'REQUEST_TOO_LARGE' : 'INVALID_JSON',
+      'Request body is invalid.',
+      error instanceof RangeError ? 413 : 400,
+      id
+    );
   }
 }
 export async function DELETE(request: Request, context: Context) {

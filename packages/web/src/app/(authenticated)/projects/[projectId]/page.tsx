@@ -12,7 +12,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ projec
     <Container>
       <Title order={1}>{result.project.name}</Title>
       {result.project.archivedAt && <Text c="orange">Archived</Text>}
-      <MediaList media={result.data} projects={projects} allowInbox />
+      <MediaList
+        media={result.data}
+        page={result.page}
+        pageUrl={`/api/projects/${id}/media`}
+        projects={projects}
+        allowInbox
+      />
     </Container>
   );
 }
